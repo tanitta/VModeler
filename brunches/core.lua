@@ -27,7 +27,7 @@ namespace"trit"{
 		    	:body(function(self,strFilePath)
 		    		self.strFilePath = strFilePath
 		    		self.objTxtFile = trit.fileio.BaseFile:new(self.strFilePath)
-		    		self.strRaw = self.objFile:GetString()
+		    		self.strRaw = self.objTxtFile:GetString()
 		    		
 		    		self.strName = ""
 		    		self.tabVal = {}
@@ -48,10 +48,73 @@ namespace"trit"{
 		    		
 		    		-- ValBlock
 		    		do
-			    		h, f = string.find(self.strRaw,"Val\n{")
+			    		-- h, f = string.find(self.strRaw,"Val")
+			    		h, f = string.find(self.strRaw,"{.-}")
+			    		h = h + 2
+			    		f = f - 1
+		    			local strVal = string.sub(self.strRaw,h,f)
+		    			local strValL = ""
+		    			local i = 0
 			    		repeat 
-			    			string.find("\(")
-			    		until strBuffer ~= "}"
+			    			
+			    			h, f = string.find(strVal,"\n")
+			    			local lEnd = f
+							strValL = string.sub(strVal,1,lEnd)
+			    			
+			    			if strValL ~= "\t\n" then
+								i = i + 1
+				    			self.tabVal[i] = {}
+				    			
+				    			-- name
+			    				h, f = string.find(strValL,"[%w-_]-%(")
+				    			self.tabVal[i].name = string.sub(strValL,h,f-1)
+				    			
+				    			--default
+			    				h, f = string.find(strValL,"default=%-?%d-.?%d-[%,%)]")
+			    				if h == nil then
+			    					self.tabVal[i].default = 0
+			    				else
+				    				self.tabVal[i].default = tonumber(string.sub(strValL,h+8,f-1))	
+			    				end
+				    			
+				    			--min
+			    				h, f = string.find(strValL,"min=%-?%d-.?%d-[%,%)]")
+			    				if h == nil then
+			    					self.tabVal[i].min = -9999999999999999
+			    				else
+				    				self.tabVal[i].min = tonumber(string.sub(strValL,h+4,f-1))
+			    				end
+				    			
+				    			--max
+			    				h, f = string.find(strValL,"max=%-?%d-.?%d-[%,%)]")
+			    				if h == nil then
+			    					self.tabVal[i].max = 9999999999999999
+			    				else
+				    				self.tabVal[i].max = tonumber(string.sub(strValL,h+4,f-1))
+			    				end
+				    			
+				    			--step
+			    				h, f = string.find(strValL,"step=%-?%d-.?%d-[%,%)]")
+			    				if h == nil then
+			    					self.tabVal[i].step = 0
+			    				else
+				    				self.tabVal[i].step = tonumber(string.sub(strValL,h+5,f-1))
+			    				end
+				    			
+				    			--disp
+			    				h, f = string.find(strValL,"disp=%-?%d-.?%d-[%,%)]")
+			    				if h == nil then
+			    					self.tabVal[i].disp = 0
+			    				else
+				    				self.tabVal[i].disp = tonumber(string.sub(strValL,h+5,f-1))
+			    				end
+				    			
+				    			out(i,self.tabVal[i].disp)
+			    			end
+			    			
+			    			strVal = string.sub(strVal,lEnd+1)
+			    			
+			    		until strVal == ""
 			    	end	
 			    	-- BodyBlock
 			    	-- LuaBlock
