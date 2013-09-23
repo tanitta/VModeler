@@ -1,17 +1,10 @@
 namespace"trit"{
-	namespace"VModeler"{
+	namespace"vmodeler"{
 		class"BaseVModel"{
-				field"strName"
-				:init("");
-				
-				field"tabVal"
-				:init({});
-				
-				field"tabBody"
-				:init({});
-				
-				field"tabLua"
-				:init({});
+				field"strName":init("");	
+				field"tabVal":init({});
+				field"tabBody":init({});
+				field"tabLua":init({});
 				
 		    	metamethod"_init"
 		    	:body(function(self)
@@ -31,11 +24,37 @@ namespace"trit"{
 		
 		class"VImport"{
 		    	metamethod"_init"
-		    	:body(function(self)
+		    	:body(function(self,strFilePath)
+		    		self.strFilePath = strFilePath
+		    		self.objTxtFile = trit.fileio.BaseFile:new(self.strFilePath)
+		    		self.strRaw = self.objFile:GetString()
+		    		
+		    		self.strName = ""
+		    		self.tabVal = {}
+		    		self.tabBody = {}
+		    		self.tabLua = {} 		    		
 		    	end);
 		
-		    	metamethod"__call"
+				method"Reload"
+				:body(function(self)
+		    		self.strRaw = self.objTxtFile:GetString()
+					
+				end);
+		
+		    	method"GenerateData"
 		    	:body(function(self)
+		    		local h,f = 0,0
+		    		local strBuffer = ""
+		    		
+		    		-- ValBlock
+		    		do
+			    		h, f = string.find(self.strRaw,"Val\n{")
+			    		repeat 
+			    			string.find("\(")
+			    		until strBuffer ~= "}"
+			    	end	
+			    	-- BodyBlock
+			    	-- LuaBlock
 		    	end);
 		};
 		
