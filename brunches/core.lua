@@ -121,6 +121,9 @@ namespace"trit"{
 					local block = function() end
 					local strBodyL = ""
 					local i = 0
+					
+					local tabB = self.tabBody
+					
 					repeat 
 						h, f = string.find(strBody,"\n")
 						local lEnd = f
@@ -130,6 +133,13 @@ namespace"trit"{
 						if h ~= nil then
 							--ChipParameter
 							
+							-- is not Top
+							h, f = string.find(strBodyL,":")
+							if h ~= nil then
+								--direction
+								-- tabB.
+							end
+							
 							
 							depth = depth + 1
 						end 
@@ -137,6 +147,7 @@ namespace"trit"{
 						h, f = string.find(strBodyL,"}")
 						if h ~= nil then
 							depth = depth - 1
+						else
 						end
 						
 						strBody = string.sub(strBody,lEnd+1)
