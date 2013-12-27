@@ -151,7 +151,7 @@ namespace"trit"{
 						end
 						
 						strBody = string.sub(strBody,lEnd+1)
-					until strBody == ""
+					until depth == 0
 											
 				end);
 			
